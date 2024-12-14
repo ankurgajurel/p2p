@@ -6,16 +6,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "7000:7000"
-    volumes:
-      - ./client:/app
-    environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:7001
-
   server:
     build:
       context: ./server
       dockerfile: Dockerfile
     ports:
       - "7001:7001"
-    volumes:
-      - ./server:/app

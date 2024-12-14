@@ -3,10 +3,12 @@ FROM node:18-alpine
 WORKDIR /app
 
 COPY package.json ./
-RUN npm i --production
+
+RUN npm i
 
 COPY . .
 
-EXPOSE 7001
+EXPOSE 8000
 
-CMD ["npm", "run", "dev"]
+RUN npm run build
+CMD ["npm", "run", "start"]

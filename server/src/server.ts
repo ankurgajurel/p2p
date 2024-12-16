@@ -8,7 +8,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer as any, {
   cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:7000",
+    origin: process.env.CLIENT_URL || "http://localhost:7005",
     methods: ["GET", "POST"],
   },
 });
@@ -17,7 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 app.post("/api/room", (req, res) => {
-  const roomId = uuidv4();
+  const roomId = uuidv4().split("-").slice(1, 4).join("-");
   res.json({ roomId });
 });
 

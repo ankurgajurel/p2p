@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import { useWebRTC } from "@/hooks/useWebRTC";
+import { UserRound } from "lucide-react";
 
 export default function RoomPage({ params }: { params: { roomId: string } }) {
   const localVideoRef = useRef<HTMLVideoElement>(null);
@@ -11,10 +12,9 @@ export default function RoomPage({ params }: { params: { roomId: string } }) {
     io(process.env.NEXT_PUBLIC_API_URL || "http://localhost:7001")
   );
 
-  const { localStream, remoteStream } = useWebRTC(
-    socketRef.current,
-    params.roomId
-  );
+  const { roomId } = params;
+
+  const { localStream, remoteStream } = useWebRTC(socketRef.current, roomId);
 
   useEffect(() => {
     if (localVideoRef.current && localStream) {
@@ -46,7 +46,7 @@ export default function RoomPage({ params }: { params: { roomId: string } }) {
     <div className="min-h-screen bg-gray-900 p-4">
       <div className="max-w-6xl mx-auto">
         <div className="mb-4">
-          <h1 className="text-white text-2xl">Room: {params.roomId}</h1>
+          <h1 className="text-white text-2xl">Room: {roomId}</h1>
           <p className="text-gray-400">
             Share this room ID with others to join the call
           </p>
@@ -55,32 +55,38 @@ export default function RoomPage({ params }: { params: { roomId: string } }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Local Video */}
           <div className="relative bg-black rounded-lg overflow-hidden">
-            <video
-              ref={localVideoRef}
-              autoPlay
-              playsInline
-              muted
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute bottom-4 left-4">
-              <span className="bg-gray-900 text-white px-2 py-1 rounded">
-                You
-              </span>
-            </div>
+            {localStream ? (
+              <video
+                ref={localVideoRef}
+                autoPlay
+                playsInline
+                muted
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="absolute bottom-4 left-4">
+                <span className="bg-gray-900 text-white px-2 py-1 rounded">
+                  <UserRound />
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="relative bg-black rounded-lg overflow-hidden">
-            <video
-              ref={remoteVideoRef}
-              autoPlay
-              playsInline
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute bottom-4 left-4">
-              <span className="bg-gray-900 text-white px-2 py-1 rounded">
-                Peer
-              </span>
-            </div>
+            {remoteStream ? (
+              <video
+                ref={remoteVideoRef}
+                autoPlay
+                playsInline
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="absolute bottom-4 left-4 w-full h-full">
+                <span className="bg-gray-900 text-white px-2 py-1 rounded flex w-full items-center justify-center h-full">
+                  <UserRound />
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
